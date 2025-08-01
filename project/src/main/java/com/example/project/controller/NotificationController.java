@@ -22,12 +22,25 @@ public class NotificationController {
 
     @PostMapping("/send")
     public ResponseEntity<String> sendNotification(@RequestBody Notification notification) {
-        notificationService.sendNotification(notification);
-        return ResponseEntity.ok("Notification sent");
+        try {
+            notificationService.sendNotification(notification);
+            return ResponseEntity.ok("Notification sent");
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Failed to send notification: " + e.getMessage());
+        }
     }
 
     @PostMapping("/schedule")
-    public void scheduleNotification(@RequestBody Notification notification) {
-        notificationService.makeScheduledNotification(notification);
+    public ResponseEntity<String> scheduleNotification(@RequestBody Notification notification) {
+        try {
+            notificationService.makeScheduledNotification(notification);
+            return ResponseEntity.ok("Notification scheduled");
+        } catch (Exception e) {
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Failed to schedule notification: " + e.getMessage());
+        }
     }
 }
